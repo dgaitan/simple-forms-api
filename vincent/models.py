@@ -70,3 +70,51 @@ class Form(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class FormField(models.Model):
+    """Form Fields"""
+    class FieldTypes(models.IntegerChoices):
+        TEXT = 1, _('Text')
+        TEXTAREA = 2, _('Textarea')
+        NUMBER = 3, _('Number')
+        SELECT = 4, _('Select')
+        CHECKBOX = 5, _('Checkbox')
+        RADIO = 6, _('Radio')
+
+    form = models.ForeignKey(
+        Form,
+        verbose_name=_('Form'),
+        on_delete=models.CASCADE
+    )
+    field_type = models.IntegerField(
+        _('Field Type'),
+        blank=True,
+        default=FieldTypes.TEXT,
+        choices=FieldTypes.choices
+    )
+    label = models.CharField(
+        _('Label'),
+        help_text=_('Define a label'),
+        max_length=255
+    )
+    placeholder = models.CharField(
+        _('Placeholder'),
+        help_text=_('Add a placeholder if needed'),
+        max_length=255,
+        blank=True,
+        null=True
+    )
+    required = models.BooleanField(
+        _('Is Field Required?'),
+        default=False,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = _('Form Field')
+        verbose_name_plural = _('Form Fields')
+
+    def __str__(self):
+        return self.label
+    
