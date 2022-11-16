@@ -36,8 +36,8 @@ class Form(BaseModel):
     """Form Model"""
 
     class Statuses(models.IntegerChoices):
-        DRAFT = 1, _('Draft'),
-        PUBLISHED = 2, _('Published'),
+        DRAFT = 1, _('Draft')
+        PUBLISHED = 2, _('Published')
         TRASHED = 3, _('Trashed')
 
     name = models.CharField(
