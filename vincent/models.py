@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -88,7 +90,8 @@ class FormField(models.Model):
     form = models.ForeignKey(
         Form,
         verbose_name=_('Form'),
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='fields'
     )
     field_type = models.IntegerField(
         _('Field Type'),
@@ -122,6 +125,13 @@ class FormField(models.Model):
     class Meta:
         verbose_name = _('Form Field')
         verbose_name_plural = _('Form Fields')
+
+    def save(self, *args, **kwargs):
+        if self.label:
+            field_name = re.sub(r"[^\w\s-]", "", self.label.lower())
+            self.name = re.sub(r"[-\s]+", "_", field_name).strip("-_")
+        
+        return super(FormField, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.label
