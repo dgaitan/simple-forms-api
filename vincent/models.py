@@ -81,6 +81,7 @@ class FormField(models.Model):
         SELECT = 4, _('Select')
         CHECKBOX = 5, _('Checkbox')
         RADIO = 6, _('Radio')
+        EMAIL = 7, _('Email')
 
     form = models.ForeignKey(
         Form,
