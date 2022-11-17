@@ -78,9 +78,12 @@ class FormField(models.Model):
         TEXT = 1, _('Text')
         TEXTAREA = 2, _('Textarea')
         NUMBER = 3, _('Number')
-        SELECT = 4, _('Select')
+        SELECT = 4, _('Dropdown')
         CHECKBOX = 5, _('Checkbox')
         RADIO = 6, _('Radio')
+        EMAIL = 7, _('Email')
+        DATE = 8, _('Date')
+        TIME = 9, _('Time')
 
     form = models.ForeignKey(
         Form,
@@ -97,6 +100,11 @@ class FormField(models.Model):
         _('Label'),
         help_text=_('Define a label'),
         max_length=255
+    )
+    name = models.CharField(
+        _('Name'),
+        max_length=500,
+        blank=True
     )
     placeholder = models.CharField(
         _('Placeholder'),
@@ -117,4 +125,30 @@ class FormField(models.Model):
 
     def __str__(self):
         return self.label
+
+class Options(models.Model):
+    field = models.ForeignKey(
+        FormField,
+        verbose_name=_('Field'),
+        on_delete=models.CASCADE,
+        related_name='options'
+    )
+    name = models.CharField(
+        _('Name'),
+        max_length=255,
+        help_text=_('Option Name')
+    )
+    order = models.IntegerField(
+        _('Order'),
+        default=1,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = _('Option')
+        verbose_name_plural = _('Options')
+        ordering = ['-order']
+
+    def __str__(self):
+        return self.name
     
