@@ -82,6 +82,16 @@ class FormModelTest(TestCase):
         self.assertEqual(Form.Statuses.TRASHED, form.status)
         self.assertEqual(3, form.status)
 
+    def test_create_and_update_fields(self) -> None:
+        form = Form.objects.create(
+            name='My New Form',
+            created_by=self.user,
+            status=Form.Statuses.PUBLISHED
+        )
+
+        self.assertIsNotNone(form.created_at)
+        self.assertIsNotNone(form.updated_at)
+
 
 class FormFieldsTest(TestCase):
 
