@@ -101,6 +101,11 @@ class FormField(models.Model):
         help_text=_('Define a label'),
         max_length=255
     )
+    name = models.CharField(
+        _('Name'),
+        max_length=500,
+        blank=True
+    )
     placeholder = models.CharField(
         _('Placeholder'),
         help_text=_('Add a placeholder if needed'),
@@ -121,5 +126,29 @@ class FormField(models.Model):
     def __str__(self):
         return self.label
 
-class 
+class Options(models.Model):
+    field = models.ForeignKey(
+        FormField,
+        verbose_name=_('Field'),
+        on_delete=models.CASCADE,
+        related_name='options'
+    )
+    name = models.CharField(
+        _('Name'),
+        max_length=255,
+        help_text=_('Option Name')
+    )
+    order = models.IntegerField(
+        _('Order'),
+        default=1,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = _('Option')
+        verbose_name_plural = _('Options')
+        ordering = ['-order']
+
+    def __str__(self):
+        return self.name
     
