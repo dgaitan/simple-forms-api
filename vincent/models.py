@@ -78,10 +78,12 @@ class FormField(models.Model):
         TEXT = 1, _('Text')
         TEXTAREA = 2, _('Textarea')
         NUMBER = 3, _('Number')
-        SELECT = 4, _('Select')
+        SELECT = 4, _('Dropdown')
         CHECKBOX = 5, _('Checkbox')
         RADIO = 6, _('Radio')
         EMAIL = 7, _('Email')
+        DATE = 8, _('Date')
+        TIME = 9, _('Time')
 
     form = models.ForeignKey(
         Form,
@@ -118,4 +120,6 @@ class FormField(models.Model):
 
     def __str__(self):
         return self.label
+
+class 
     
