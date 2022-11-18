@@ -1,5 +1,5 @@
 from django.test import TestCase
-from vincent.models import User, Form, FormField
+from vincent.models import User, Form, FormField, Submission
 
 class UserModelTest(TestCase):
 
@@ -150,3 +150,41 @@ class FormFieldsTest(TestCase):
         select.options.create(name='JavaScript', order=3)
 
         self.assertEqual(3, select.options.count())
+
+
+class SubmissionTest(TestCase):
+
+    def setUp(self) -> None:
+        self.user = User.objects.create(
+            username='dgaitan',
+            password='secret'
+        )
+        self.form = Form.objects.create(
+            name='My New Form',
+            created_by=self.user,
+            status=Form.Statuses.PUBLISHED
+        )
+        self.form.fields.create(label='First Name', required=True)
+        self.form.fields.create(label='Email', required=True, field_type=FormField.FieldTypes.EMAIL)
+        self.form.fields.create(label='Message', required=True, field_type=FormField.FieldTypes.TEXTAREA)
+
+    def test_submission(self) -> None:
+        submission = Submission.objects.create(
+            form=self.form,
+            ip_address='192.168.0.1'
+        )
+
+        first_name = self.form.fields.filter(label='First Name').first()
+        submission.answers.create(question=first_name, answer='David Gaitan')
+
+        email = self.form.fields.filter(label='Email').first()
+        submission.answers.create(question=email, answer='david@gmail.com')
+
+        message = self.form.fields.filter(label='Message').first()
+        submission.answers.create(question=message, answer='This is my message')
+
+        self.assertEqual(3, submission.answers.count())
+        
+        first_name = submission.answers.filter(question=first_name).first()
+        self.assertEqual('First Name', first_name.question.label)
+        self.assertEqual('David Gaitan', first_name.answer)
