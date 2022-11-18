@@ -161,4 +161,57 @@ class Options(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
+class Submission(BaseModel):
+    """
+    Submission
+
+    It refers to every single submit on a form
+    """
+    form = models.ForeignKey(
+        Form,
+        verbose_name=_('Form'),
+        on_delete=models.CASCADE,
+        related_name='submissions'
+    )
+    ip_address = models.GenericIPAddressField(
+        _('IP Address'),
+        blank=True,
+        null=True
+    )
+
+    class Meta:
+        verbose_name = _('Submission')
+        verbose_name_plural = _('Submissions')
+
+    def __str__(self):
+        return "Submission #{0} for {1}".format(self.pk, self.form.name)
+
+
+class Answer(models.Model):
+    """
+    Answer
+
+    This represents an answer on a form submission
+    """
+    submission = models.ForeignKey(
+        Submission,
+        verbose_name=_('Submission'),
+        on_delete=models.CASCADE,
+        related_name='answers'
+    )
+    question = models.ForeignKey(
+        FormField,
+        verbose_name=_('Question'),
+        on_delete=models.CASCADE,
+        related_name='submission_answers'
+    )
+    answer = models.TextField(_('Answer'))
+
+    class Meta:
+        verbose_name = _('Answer')
+        verbose_name_plural = _('Answers')
+
+    def __str__(self):
+        return "Answer for: {}".format(self.question.label)
