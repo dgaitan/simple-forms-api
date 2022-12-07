@@ -2,16 +2,16 @@ from django.test import TestCase
 
 from vincent.models import User
 
-
 class AuthAPITest(TestCase):
 
     def test_api_login(self) -> None:
         user = User.objects.create_user(username='dgaitan', email='david@mail.com', password='secret')
-
         request = self.client.post('/api/auth/token', {
             'username': 'dgaitan',
             'password': 'secret'
         }, 'application/json')
+
+        print(request.json())
 
         self.assertEqual(200, request.status_code)
 
